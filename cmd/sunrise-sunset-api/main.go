@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	r := gin.Default()
+	r := gin.Default() // TODO: Make debug mode configurable
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
