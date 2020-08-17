@@ -1,33 +1,86 @@
 package main
 
 import (
-	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/kelvins/sunrisesunset"
-	"os"
+	"log"
+	"net/http"
+	"strconv"
 	"time"
 )
 
 func main() {
-	d, err := time.Parse("2006-01-02", "2020-04-27")
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	r := gin.Default()
 
-	p := sunrisesunset.Parameters{
-		Latitude:  51.963691,
-		Longitude: 7.610362,
-		UtcOffset: 0,
-		Date:      d,
-	}
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"Time": time.Now().Unix(),
+		})
+	})
 
-	sunrise, sunset, err := p.GetSunriseSunset()
+	r.GET("/sunrise-sunset", func(c *gin.Context) {
+		lat, err := strconv.ParseFloat(c.Query("latitude"), 64) // TODO: Simplify input validation and extract code
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"Message": "Invalid latitude",
+			})
+			return
+		}
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+		lon, err := strconv.ParseFloat(c.Query("longitude"), 64)
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"Message": "Invalid longitude",
+			})
+			return
+		}
 
-	fmt.Println(sunrise, sunset)
+		utcOffset, err := strconv.ParseFloat(c.Query("utcOffset"), 64)
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"Message": "Invalid utcOffset",
+			})
+			return
+		}
+
+		date, err := time.Parse("2006-01-02", c.Query("date"))
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"Message": "Invalid date",
+			})
+			return
+		}
+
+		p := sunrisesunset.Parameters{
+			Latitude:  lat,
+			Longitude: lon,
+			UtcOffset: utcOffset,
+			Date:      date,
+		}
+
+		sunrise, sunset, err := p.GetSunriseSunset()
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"Message": "Failed to determine sunrise/sunset",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"Latitude":  lat,
+			"Longitude": lon,
+			"UtcOffset": utcOffset,
+			"Date":      date.Format("2006-01-02"),
+			"Sunrise":   sunrise.Format("15:04:05"),
+			"Sunset":    sunset.Format("15:04:05"),
+		})
+	})
+
+	log.Println(r.Run(":8080")) // TODO: Make configurable
 }
