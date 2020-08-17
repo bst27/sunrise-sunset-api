@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	port := flag.Int64("port", 8080, "Port to make the webservice available at")
 	debug := flag.Bool("debug", false, "Enable debug mode")
 	flag.Parse()
 
@@ -91,5 +92,5 @@ func main() {
 		})
 	})
 
-	log.Println(r.Run(":8080")) // TODO: Make configurable
+	log.Println(r.Run(":" + strconv.FormatInt(*port, 10)))
 }
