@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/gin-gonic/gin"
 	"github.com/kelvins/sunrisesunset"
 	"log"
@@ -10,8 +11,16 @@ import (
 )
 
 func main() {
+	debug := flag.Bool("debug", false, "Enable debug mode")
+	flag.Parse()
 
-	r := gin.Default() // TODO: Make debug mode configurable
+	if *debug {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	r := gin.Default()
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
