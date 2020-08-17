@@ -6,6 +6,7 @@ import (
 	"github.com/kelvins/sunrisesunset"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 )
@@ -14,6 +15,11 @@ func main() {
 	port := flag.Int64("port", 8080, "Port to make the webservice available at")
 	debug := flag.Bool("debug", false, "Enable debug mode")
 	flag.Parse()
+
+	if len(os.Args) == 2 && os.Args[1] == "help" {
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
 
 	if *debug {
 		gin.SetMode(gin.DebugMode)
