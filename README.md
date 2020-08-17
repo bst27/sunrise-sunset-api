@@ -1,3 +1,5 @@
+![sunrise-sunset-api](https://raw.githubusercontent.com/bst27/sunrise-sunset-api/master/website/banner.png)
+
 # About
 An HTTP API to get sunrise and sunset times.
 
