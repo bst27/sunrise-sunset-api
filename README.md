@@ -18,3 +18,6 @@ http://localhost:8080/sunrise-sunset?utcOffset=2&latitude=51.963691&longitude=7.
     "UtcOffset": 2
 }
 ```
+
+# Build
+To build executables for multiple platforms you can use the build script at `scripts/build.sh`.
