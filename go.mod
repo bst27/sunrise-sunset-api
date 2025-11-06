@@ -1,6 +1,6 @@
 module github.com/bst27/sunrise-sunset-api
 
-go 1.25.3
+go 1.25.4
 
 require (
 	github.com/gin-gonic/gin v1.11.0
