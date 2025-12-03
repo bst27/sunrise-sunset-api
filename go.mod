@@ -4,7 +4,7 @@ go 1.25.5
 
 require (
 	github.com/gin-gonic/gin v1.11.0
-	github.com/kelvins/sunrisesunset v0.0.0-20170601204625-14f1915ad4b4
+	github.com/kelvins/sunrisesunset v1.0
 )
 
 require (
